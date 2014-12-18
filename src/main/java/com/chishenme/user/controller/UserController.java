@@ -24,7 +24,7 @@ public class UserController
         User user = new User();
         user.setName(name);
         userMapper.addUser(user);
-
+        
         return userMapper.getAllUsers();
     }
 }
