@@ -48,33 +48,35 @@ public class UserController
     {
     	UserInfo userInfo = new UserInfo();
     	String code = "0";
+    	String userName = "";
     	
     	// confirm password matches password
     	if (! matchConfirmPassword(password, confirm_password))
     	{
     		code = "1";
-    		return new UserAddResponseModel(code, userInfo);
+    		return new UserAddResponseModel(code, userName, userInfo);
     	}
     	
     	// valid name format
     	if (! UserCriteria.isValidUserNameFormat(name))
 		{
 			code = "2";
-			return new UserAddResponseModel(code, userInfo);
+			return new UserAddResponseModel(code, userName, userInfo);
 		}
+    	userName = name;
     	
     	// valid password format
     	if (! UserCriteria.isValidPasswordFormat(password))
     	{
     		code = "3";
-    		return new UserAddResponseModel(code, userInfo);
+    		return new UserAddResponseModel(code, userName, userInfo);
     	}
     	
     	// no duplicate user
     	if (userMapper.getNumberOfUsersByName(name) > 0)
     	{
     		code = "4";
-    		return new UserAddResponseModel(code, userInfo);
+    		return new UserAddResponseModel(code, userName, userInfo);
     	}
     	
     	// add a new UserInfo
@@ -105,9 +107,9 @@ public class UserController
         // set Cookies
         
         String ip_addr = httpServletRequest.getRemoteAddr();
-        
         logger.debug(ip_addr);
-        return new UserAddResponseModel(code, userInfo);
+        
+        return new UserAddResponseModel(code, userName, userInfo);
     }
     
     private boolean matchConfirmPassword(String password, String confirm_password)
