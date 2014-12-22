@@ -4,12 +4,16 @@
 
 <mapper namespace='com.chishenme.dao.user.UserMapper'>
 
-    <insert id="addUser" parameterType="com.chishenme.model.user.User" useGeneratedKeys="true" keyProperty="user_id" keyColumn="user_id">
+    <insert id="addUser" parameterType="com.chishenme.model.user.User">
         INSERT INTO user (user_id, user_name, password, modifier_code)
         VALUES (#{user_id}, #{user_name}, #{password}, #{modifier_code})
     </insert>
 
     <select id='getNumberOfUsersByName' parameterType="string" resultType='int'>
         SELECT count(*) FROM user where user_name = #{name}
+    </select>
+    
+    <select id='getUsersByNameAndPassword' parameterType="map" resultType='com.chishenme.model.user.User'>
+        SELECT * FROM user where user_name = #{name} and password = #{password}
     </select>
 </mapper>

@@ -93,6 +93,10 @@ public class UserInfo
 	{
 		return modifier_code;
 	}
+	public void setModifier_code(int modifier_code)
+	{
+		this.modifier_code = modifier_code;
+	}
 	public void setModifier_code(ModifierCode modifier_code)
 	{
 		this.modifier_code = modifier_code.getModifierCode();

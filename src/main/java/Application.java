@@ -1,5 +1,7 @@
 import com.chishenme.dao.user.UserAccountStatusMapper;
 import com.chishenme.dao.user.UserInfoMapper;
+import com.chishenme.dao.user.UserLoginHistoryMapper;
+import com.chishenme.dao.user.UserLoginInfoMapper;
 import com.chishenme.dao.user.UserMapper;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -15,14 +17,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.annotation.Resources;
 import javax.sql.DataSource;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * User: nathanchen Date: 18/12/2014 Time: 4:23 PM Description:
@@ -54,14 +52,6 @@ public class Application
 	@Bean
 	public SqlSessionFactory getSqlSessionFactory()
 	{
-//		Resource[] resources = new Resource[] {
-//				new ClassPathResource(new ClassPathResource(
-//						getMapperXMLPath(UserMapper.class)).getPath()),
-//				new ClassPathResource(new ClassPathResource(
-//						getMapperXMLPath(UserInfoMapper.class)).getPath()),
-//				new ClassPathResource(new ClassPathResource(
-//						getMapperXMLPath(UserAccountStatusMapper.class)).getPath())};
-		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		Resource[] resources = null;
 		try
@@ -113,6 +103,22 @@ public class Application
 		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
 				getSqlSessionFactory());
 		return sessionTemplate.getMapper(UserAccountStatusMapper.class);
+	}
+	
+	@Bean
+	public UserLoginInfoMapper getUserLoginInfoMapper()
+	{
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
+				getSqlSessionFactory());
+		return sessionTemplate.getMapper(UserLoginInfoMapper.class);
+	}
+	
+	@Bean
+	public UserLoginHistoryMapper getUserLoginHistoryMapper()
+	{
+		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
+				getSqlSessionFactory());
+		return sessionTemplate.getMapper(UserLoginHistoryMapper.class);
 	}
 
 	public static String getMapperXMLPath(Class<?> clazz)

@@ -35,6 +35,10 @@ public class UserAccountStatus
 	{
 		return status;
 	}
+	public void setStatus(int status)
+	{
+		this.status = status;
+	}
 	public void setStatus(Status status)
 	{
 		this.status = status.getStatusCode();
@@ -50,6 +54,10 @@ public class UserAccountStatus
 	public int getModifier_code()
 	{
 		return modifier_code;
+	}
+	public void setModifier_code(int modifier_code)
+	{
+		this.modifier_code = modifier_code;
 	}
 	public void setModifier_code(ModifierCode modifier_code)
 	{
