@@ -6,7 +6,7 @@
 
     <insert id="addUser" parameterType="com.chishenme.model.user.User">
         INSERT INTO user (user_id, user_name, password, modifier_code)
-        VALUES (#{user_id}, #{user_name}, #{password}, #{modifier_code})
+        VALUES (#{user_id}, #{user_name}, #{password}, "system")
     </insert>
 
     <select id='getNumberOfUsersByName' parameterType="string" resultType='int'>
