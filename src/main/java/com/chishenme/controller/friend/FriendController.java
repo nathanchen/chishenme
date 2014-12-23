@@ -39,6 +39,13 @@ public class FriendController
     {
 		int code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
 		
+		// cannot add self as friend
+		if (user_id == friend_id)
+		{
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_CANNOT_FRIEND_SELF.getRtnCode();
+			return new FriendAddResponseModel(code);
+		}
+		
 		// user_id is valid 
 		if (UserInfoMapper.selectNumberOfUserInfoByUserId(user_id) != 1)
 		{
