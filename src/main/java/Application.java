@@ -7,10 +7,12 @@ import com.chishenme.dao.user.UserMapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -27,6 +29,8 @@ import java.io.IOException;
  */
 @ComponentScan
 @EnableAutoConfiguration
+@Configuration
+@MapperScan("com.chishenme.dao.user")
 public class Application
 {
 
@@ -79,46 +83,6 @@ public class Application
 			System.exit(0);
 		}
 		return sqlSessionFactory;
-	}
-
-	@Bean
-	public UserMapper getUserMapper()
-	{
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
-				getSqlSessionFactory());
-		return sessionTemplate.getMapper(UserMapper.class);
-	}
-	
-	@Bean
-	public UserInfoMapper getUserInfoMapper()
-	{
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
-				getSqlSessionFactory());
-		return sessionTemplate.getMapper(UserInfoMapper.class);
-	}
-	
-	@Bean
-	public UserAccountStatusMapper getAccountStatusMapper()
-	{
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
-				getSqlSessionFactory());
-		return sessionTemplate.getMapper(UserAccountStatusMapper.class);
-	}
-	
-	@Bean
-	public UserLoginInfoMapper getUserLoginInfoMapper()
-	{
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
-				getSqlSessionFactory());
-		return sessionTemplate.getMapper(UserLoginInfoMapper.class);
-	}
-	
-	@Bean
-	public UserLoginHistoryMapper getUserLoginHistoryMapper()
-	{
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(
-				getSqlSessionFactory());
-		return sessionTemplate.getMapper(UserLoginHistoryMapper.class);
 	}
 
 	public static String getMapperXMLPath(Class<?> clazz)
