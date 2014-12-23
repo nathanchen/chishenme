@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace='com.chishenme.dao.friend.UserPartnerMapper'>
+    <insert id="addUserPartner" parameterType="com.chishenme.model.friend.UserPartner" useGeneratedKeys="true" keyProperty="entry_id">
+        INSERT INTO user_partner (user_id, friend_id, status, modifier_code)
+        VALUES (#{user_id}, #{friend_id}, #{status}, #{modifier_code})
+    </insert>
+    
+    <select id="selectLatestPartnerStatusByUserIdAndFriendId" resultType="com.chishenme.model.friend.UserPartner" parameterType="map">
+    	SELECT * FROM user_partner 
+    	WHERE user_id = #{user_id} and friend_id = #{friend_id} 
+    	ORDER BY modify_date desc LIMIT 1
+    </select>
+</mapper>

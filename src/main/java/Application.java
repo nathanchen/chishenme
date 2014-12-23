@@ -30,7 +30,7 @@ import java.io.IOException;
 @ComponentScan
 @EnableAutoConfiguration
 @Configuration
-@MapperScan("com.chishenme.dao.user")
+@MapperScan("com.chishenme.dao")
 public class Application
 {
 

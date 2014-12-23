@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace='com.chishenme.dao.friend.FriendBlackListInfoMapper'>
+    <select id="selectLatestFriendBlackListInfoByUserIdAndObjectId" resultType="com.chishenme.model.friend.FriendBlackListInfo" parameterType="map">
+    	SELECT * FROM friend_black_list_info 
+    	WHERE user_id = #{user_id} and sensor_object_id = #{sensor_object_id} 
+    	ORDER BY modify_date desc LIMIT 1
+    </select>
+    
+    <insert id="addFriendBlackListInfo" parameterType="com.chishenme.model.friend.FriendBlackListInfo" useGeneratedKeys="true" keyProperty="entry_id">
+        INSERT INTO friend_black_list_info (user_id, sensor_object_id, status, modifier_code)
+        VALUES (#{user_id}, #{sensor_object_id}, #{status}, #{modifier_code})
+    </insert>
+</mapper>

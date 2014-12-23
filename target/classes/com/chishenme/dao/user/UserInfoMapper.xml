@@ -7,4 +7,12 @@
         INSERT INTO user_info (first_name, last_name, email, age, gender, user_city, modifier_code)
         VALUES (#{first_name}, #{last_name}, #{email}, #{age}, #{gender}, #{user_city}, #{modifier_code})
     </insert>
+    
+    <select id="selectUserInfoByUserId" resultType="com.chishenme.model.user.UserInfo" parameterType="int">
+    	SELECT * FROM user_info WHERE user_id = #{user_id}
+    </select>
+    
+    <select id="selectNumberOfUserInfoByUserId" resultType="int" parameterType="int">
+    	SELECT COUNT(*) FROM user_info WHERE user_id = #{user_id}
+    </select>
 </mapper>
