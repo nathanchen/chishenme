@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chishenme.config.ModifierCode;
-import com.chishenme.config.Status;
+import com.chishenme.config.ModifierCodeReference;
+import com.chishenme.config.RtnCodeReference;
+import com.chishenme.config.StatusReference;
 import com.chishenme.dao.friend.FriendBlackListInfoMapper;
 import com.chishenme.dao.friend.UserPartnerMapper;
 import com.chishenme.dao.user.UserInfoMapper;
@@ -36,19 +37,19 @@ public class FriendController
     @Transactional
     public FriendAddResponseModel requestToAddFriend(@RequestParam("userid") int user_id, @RequestParam("friendid") int friend_id)
     {
-		String code = "0";
+		int code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
 		
 		// user_id is valid 
 		if (UserInfoMapper.selectNumberOfUserInfoByUserId(user_id) != 1)
 		{
-			code = "1";
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_INVALID_USERID.getRtnCode();
 			return new FriendAddResponseModel(code);
 		}
 		
 		// friend_id is valid
 		if (UserInfoMapper.selectNumberOfUserInfoByUserId(friend_id) != 1)
 		{
-			code = "2";
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_INVALID_FRIENDID.getRtnCode();
 			return new FriendAddResponseModel(code);
 		}
 		
@@ -57,25 +58,25 @@ public class FriendController
 		if (userPartner != null)
 		{
 			// not partner yet
-			if (userPartner.getStatus() == Status.USER_PARTNER_STATUS_FRIEND.getStatusCode())
+			if (userPartner.getStatus() == StatusReference.USER_PARTNER_STATUS_FRIEND.getStatusCode())
 			{
-				code = "3";
+				code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_ARE_ALREADY_FRIENDS.getRtnCode();
 				return new FriendAddResponseModel(code);
 			}
 			
 			// request not pending
-			if (userPartner.getStatus() == Status.USER_PARTNER_STATUS_WAITINGFORREPLY.getStatusCode())
+			if (userPartner.getStatus() == StatusReference.USER_PARTNER_STATUS_WAITINGFORREPLY.getStatusCode())
 			{
-				code = "4";
+				code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_FRIEND_REQUEST_STILL_PENDING.getRtnCode();
 				return new FriendAddResponseModel(code);
 			}
 		}
 		
 		// user_id is not in friend's black list && status is normal
 		FriendBlackListInfo friendBlackListInfo = friendBlacklistInfoMapper.selectLatestFriendBlackListInfoByUserIdAndObjectId(friend_id, user_id);
-		if ((friendBlackListInfo != null) && (friendBlackListInfo.getStatus() == Status.FRIEND_BLACK_LIST_INFO_STATUS_NORMAL.getStatusCode()))
+		if ((friendBlackListInfo != null) && (friendBlackListInfo.getStatus() == StatusReference.FRIEND_BLACK_LIST_INFO_STATUS_NORMAL.getStatusCode()))
 		{
-			code = "5";
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_USER_IS_BLACKLISTED.getRtnCode();
 			return new FriendAddResponseModel(code);
 		}
 		
@@ -84,22 +85,22 @@ public class FriendController
 		if (friendBlacklistInfoMapper.selectLatestFriendBlackListInfoByUserIdAndObjectId(user_id, friend_id) != null)
 		{
 			friendBlackListInfo = new FriendBlackListInfo(user_id, friend_id, 
-					Status.FRIEND_BLACK_LIST_INFO_STATUS_CANCELLED.getStatusCode(), ModifierCode.SELF.getModifierCode());
+					StatusReference.FRIEND_BLACK_LIST_INFO_STATUS_CANCELLED.getStatusCode(), ModifierCodeReference.SELF.getModifierCode());
 			friendBlacklistInfoMapper.addFriendBlackListInfo(friendBlackListInfo);
 		}
 		
 		// if friend's request is pending, then change it to NORMAL; and user's request is normal
 		userPartner = userPartnerMapper.selectLatestPartnerStatusByUserIdAndFriendId(friend_id, user_id);
-		if ((userPartner != null) && (userPartner.getStatus() == Status.USER_PARTNER_STATUS_WAITINGFORREPLY.getStatusCode()))
+		if ((userPartner != null) && (userPartner.getStatus() == StatusReference.USER_PARTNER_STATUS_WAITINGFORREPLY.getStatusCode()))
 		{
-			userPartnerMapper.addUserPartner(new UserPartner(friend_id, user_id, Status.USER_PARTNER_STATUS_FRIEND.getStatusCode(), ModifierCode.SYSTEM.getModifierCode()));
-			userPartnerMapper.addUserPartner(new UserPartner(user_id, friend_id, Status.USER_PARTNER_STATUS_FRIEND.getStatusCode(), ModifierCode.SELF.getModifierCode()));
-			code = "6";
+			userPartnerMapper.addUserPartner(new UserPartner(friend_id, user_id, StatusReference.USER_PARTNER_STATUS_FRIEND.getStatusCode(), ModifierCodeReference.SYSTEM.getModifierCode()));
+			userPartnerMapper.addUserPartner(new UserPartner(user_id, friend_id, StatusReference.USER_PARTNER_STATUS_FRIEND.getStatusCode(), ModifierCodeReference.SELF.getModifierCode()));
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_BECOME_FRIENDS.getRtnCode();
 			return new FriendAddResponseModel(code);
 		}
 		
 		// user initial the request, save it as WAITINGFORREPLY
-		userPartner = new UserPartner(user_id, friend_id, Status.USER_PARTNER_STATUS_WAITINGFORREPLY.getStatusCode(), ModifierCode.SELF.getModifierCode());
+		userPartner = new UserPartner(user_id, friend_id, StatusReference.USER_PARTNER_STATUS_WAITINGFORREPLY.getStatusCode(), ModifierCodeReference.SELF.getModifierCode());
 		userPartnerMapper.addUserPartner(userPartner);
 		return new FriendAddResponseModel(code);
     }

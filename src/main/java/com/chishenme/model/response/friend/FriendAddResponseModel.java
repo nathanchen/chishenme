@@ -2,21 +2,21 @@ package com.chishenme.model.response.friend;
 
 public class FriendAddResponseModel
 {
-	private String code;
+	private int code;
 	
 	public FriendAddResponseModel() {}
 	
-	public FriendAddResponseModel(String code)
+	public FriendAddResponseModel(int code)
 	{
 		this.code = code;
 	}
 
-	public String getCode()
+	public int getCode()
 	{
 		return code;
 	}
 
-	public void setCode(String code)
+	public void setCode(int code)
 	{
 		this.code = code;
 	}

@@ -4,13 +4,13 @@ import com.chishenme.model.user.UserInfo;
 
 public class UserAddResponseModel
 {
-	private String code;
+	private int code;
 	private String userName;
 	private UserInfo userInfo;
 	
 	public UserAddResponseModel() {}
 	
-	public UserAddResponseModel(String code, String userName, UserInfo userInfo)
+	public UserAddResponseModel(int code, String userName, UserInfo userInfo)
 	{
 		this.code = code;
 		this.userName = userName;
@@ -25,11 +25,11 @@ public class UserAddResponseModel
 	{
 		this.userName = userName;
 	}
-	public String getCode()
+	public int getCode()
 	{
 		return code;
 	}
-	public void setCode(String code)
+	public void setCode(int code)
 	{
 		this.code = code;
 	}

@@ -2,8 +2,8 @@ package com.chishenme.model.friend;
 
 import java.sql.Timestamp;
 
-import com.chishenme.config.ModifierCode;
-import com.chishenme.config.Status;
+import com.chishenme.config.ModifierCodeReference;
+import com.chishenme.config.StatusReference;
 
 public class UserPartner
 {
@@ -65,7 +65,7 @@ public class UserPartner
 		this.status = status;
 	}
 	
-	public void setStatus(Status status)
+	public void setStatus(StatusReference status)
 	{
 		this.status = status.getStatusCode();
 	}
@@ -90,7 +90,7 @@ public class UserPartner
 		this.modifier_code = modifier_code;
 	}
 	
-	public void setModifier_code(ModifierCode modifierCode)
+	public void setModifier_code(ModifierCodeReference modifierCode)
 	{
 		this.modifier_code = modifierCode.getModifierCode();
 	}

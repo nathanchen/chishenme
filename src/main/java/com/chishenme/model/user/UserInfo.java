@@ -2,7 +2,7 @@ package com.chishenme.model.user;
 
 import java.sql.Timestamp;
 
-import com.chishenme.config.ModifierCode;
+import com.chishenme.config.ModifierCodeReference;
 
 public class UserInfo
 {
@@ -97,7 +97,7 @@ public class UserInfo
 	{
 		this.modifier_code = modifier_code;
 	}
-	public void setModifier_code(ModifierCode modifier_code)
+	public void setModifier_code(ModifierCodeReference modifier_code)
 	{
 		this.modifier_code = modifier_code.getModifierCode();
 	}

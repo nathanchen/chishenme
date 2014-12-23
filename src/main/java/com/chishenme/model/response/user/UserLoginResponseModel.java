@@ -2,24 +2,24 @@ package com.chishenme.model.response.user;
 
 public class UserLoginResponseModel
 {
-	private String code;
+	private int code;
 	private int user_id;
 	private String userName;
 	
 	public UserLoginResponseModel() {}
 	
-	public UserLoginResponseModel(String code, int user_id, String userName)
+	public UserLoginResponseModel(int code, int user_id, String userName)
 	{
 		this.code = code;
 		this.user_id = user_id;
 		this.userName = userName;
 	}
 	
-	public String getCode()
+	public int getCode()
 	{
 		return code;
 	}
-	public void setCode(String code)
+	public void setCode(int code)
 	{
 		this.code = code;
 	}

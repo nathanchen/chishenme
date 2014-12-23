@@ -2,8 +2,8 @@ package com.chishenme.model.user;
 
 import java.sql.Timestamp;
 
-import com.chishenme.config.ModifierCode;
-import com.chishenme.config.Status;
+import com.chishenme.config.ModifierCodeReference;
+import com.chishenme.config.StatusReference;
 
 public class UserAccountStatus
 {
@@ -39,7 +39,7 @@ public class UserAccountStatus
 	{
 		this.status = status;
 	}
-	public void setStatus(Status status)
+	public void setStatus(StatusReference status)
 	{
 		this.status = status.getStatusCode();
 	}
@@ -59,7 +59,7 @@ public class UserAccountStatus
 	{
 		this.modifier_code = modifier_code;
 	}
-	public void setModifier_code(ModifierCode modifier_code)
+	public void setModifier_code(ModifierCodeReference modifier_code)
 	{
 		this.modifier_code = modifier_code.getModifierCode();
 	}

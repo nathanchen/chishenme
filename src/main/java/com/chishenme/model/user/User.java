@@ -2,7 +2,7 @@ package com.chishenme.model.user;
 
 import java.sql.Timestamp;
 
-import com.chishenme.config.ModifierCode;
+import com.chishenme.config.ModifierCodeReference;
 
 /**
  * User: nathanchen Date: 18/12/2014 Time: 5:01 PM Description:
@@ -55,7 +55,7 @@ public class User
 	{
 		this.modifier_code = modifier_code;
 	}
-	public void setModifier_code(ModifierCode modifier_code)
+	public void setModifier_code(ModifierCodeReference modifier_code)
 	{
 		this.modifier_code = modifier_code.getModifierCode();
 	}

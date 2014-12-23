@@ -2,8 +2,9 @@ package com.chishenme.controller.user;
 
 import java.util.ArrayList;
 
-import com.chishenme.config.ModifierCode;
-import com.chishenme.config.Status;
+import com.chishenme.config.ModifierCodeReference;
+import com.chishenme.config.RtnCodeReference;
+import com.chishenme.config.StatusReference;
 import com.chishenme.dao.user.UserAccountStatusMapper;
 import com.chishenme.dao.user.UserInfoMapper;
 import com.chishenme.dao.user.UserLoginHistoryMapper;
@@ -60,20 +61,20 @@ public class UserController
     		HttpServletRequest httpServletRequest)
     {
     	UserInfo userInfo = new UserInfo();
-    	String code = "0";
+    	int code = RtnCodeReference.USER_CREATEUSER_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
     	String userName = "";
     	
     	// confirm password matches password
     	if (! matchConfirmPassword(password, confirm_password))
     	{
-    		code = "1";
+    		code = RtnCodeReference.USER_CREATEUSER_PASSWORD_MISMATCH.getRtnCode();
     		return new UserAddResponseModel(code, userName, userInfo);
     	}
     	
     	// valid name format
     	if (! UserCriteria.isValidUserNameFormat(name))
 		{
-			code = "2";
+    		code = RtnCodeReference.USER_CREATEUSER_INVALID_NAME_FORMAT.getRtnCode();
 			return new UserAddResponseModel(code, userName, userInfo);
 		}
     	userName = name;
@@ -81,19 +82,19 @@ public class UserController
     	// valid password format
     	if (! UserCriteria.isValidPasswordFormat(password))
     	{
-    		code = "3";
+    		code = RtnCodeReference.USER_CREATEUSER_INVALID_PASSWORD_FORMAT.getRtnCode();
     		return new UserAddResponseModel(code, userName, userInfo);
     	}
     	
     	// no duplicate user
     	if (userMapper.getNumberOfUsersByName(name) > 0)
     	{
-    		code = "4";
+    		code = RtnCodeReference.USER_CREATEUSER_DUPLICATE_USER.getRtnCode();
     		return new UserAddResponseModel(code, userName, userInfo);
     	}
     	
     	// add a new UserInfo
-    	userInfo.setModifier_code(ModifierCode.SYSTEM);
+    	userInfo.setModifier_code(ModifierCodeReference.SYSTEM);
     	userInfoMapper.addUserInfo(userInfo);
         
         // get user_id for future reference
@@ -103,8 +104,8 @@ public class UserController
         // add a new UserAccountStatus
         UserAccountStatus userAccountStatus = new UserAccountStatus();
         userAccountStatus.setUser_id(user_id);
-        userAccountStatus.setModifier_code(ModifierCode.SYSTEM);
-        userAccountStatus.setStatus(Status.USER_STATUS_NORMAL);
+        userAccountStatus.setModifier_code(ModifierCodeReference.SYSTEM);
+        userAccountStatus.setStatus(StatusReference.USER_STATUS_NORMAL);
         userAccountStatusMapper.addANewUserAccountStatus(userAccountStatus);
         
         // add a new User
@@ -112,7 +113,7 @@ public class UserController
         user.setUser_id(user_id);
         user.setUser_name(name);
         user.setPassword(MD5Encryption.encrypt(password));
-        user.setModifier_code(ModifierCode.SYSTEM);
+        user.setModifier_code(ModifierCodeReference.SYSTEM);
         userMapper.addUser(user);
 
         String ip_addr = httpServletRequest.getRemoteAddr();
@@ -126,21 +127,21 @@ public class UserController
     public UserLoginResponseModel login(@RequestParam("name") String name, @RequestParam("pwd") String password,
     		HttpServletRequest httpServletRequest)
 	{
-		String code = "0";
+		int code = RtnCodeReference.USER_LOGIN_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
 		int user_id = 0;
 		String userName = "";
 		
 		// name is not null or empty
 		if (name == null || name.trim().equals(""))
 		{
-			code = "1";
+			code = RtnCodeReference.USER_LOGIN_NAME_IS_NULL_OR_EMPTY.getRtnCode();
 			return new UserLoginResponseModel(code, user_id, userName);
 		}
 		
 		// password is not null or empty
 		if (password == null || password.trim().equals(""))
 		{
-			code = "2";
+			code = RtnCodeReference.USER_LOGIN_PASSWORD_IS_NULL_OR_EMPTY.getRtnCode();
 			return new UserLoginResponseModel(code, user_id, userName);
 		}
 		
@@ -149,14 +150,14 @@ public class UserController
 		int numberOfUsersHasTheSameUsernameAndPassword = userList.size();
 		if (numberOfUsersHasTheSameUsernameAndPassword <= 0)
 		{
-			code = "3";
+			code = RtnCodeReference.USER_LOGIN_DUPLICATE_USER.getRtnCode();
 			return new UserLoginResponseModel(code, user_id, userName);
 		}
 		
 		// the account is valid
 		if (numberOfUsersHasTheSameUsernameAndPassword > 1)
 		{
-			code = "4";
+			code = RtnCodeReference.USER_LOGIN_INVALID_ACCOUNT.getRtnCode();
 			return new UserLoginResponseModel(code, user_id, userName);
 		}
 		
@@ -167,8 +168,8 @@ public class UserController
 		// add a new UserLoginInfo
 		UserLoginInfo userLoginInfo = new UserLoginInfo(user_id, userName, 
 					password, MD5Encryption.encrypt(password), 
-					Status.USER_LOGIN_INFO_STATUS_NORMAL.getStatusCode(), 
-					ModifierCode.SYSTEM.getModifierCode());
+					StatusReference.USER_LOGIN_INFO_STATUS_NORMAL.getStatusCode(), 
+					ModifierCodeReference.SYSTEM.getModifierCode());
 		userLoginInfoMapper.addUserLoginInfo(userLoginInfo);
 		
         // add a new UserLoginHistory
