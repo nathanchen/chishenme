@@ -122,7 +122,7 @@ public class UserController
         return new UserAddResponseModel(code, userName, userInfo);
     }
     
-    @RequestMapping("user/login")
+    @RequestMapping("/user/login")
     @Transactional
     public UserLoginResponseModel login(@RequestParam("name") String name, @RequestParam("pwd") String password,
     		HttpServletRequest httpServletRequest)
@@ -146,11 +146,12 @@ public class UserController
 		}
 		
 		// only one entry in DB has the same username and password
+		// TODO: password should be encrypted on client side
 		ArrayList<User> userList = (ArrayList<User>) userMapper.getUsersByNameAndPassword(name, MD5Encryption.encrypt(password));
 		int numberOfUsersHasTheSameUsernameAndPassword = userList.size();
 		if (numberOfUsersHasTheSameUsernameAndPassword <= 0)
 		{
-			code = RtnCodeReference.USER_LOGIN_DUPLICATE_USER.getRtnCode();
+			code = RtnCodeReference.USER_LOGIN_PASSWORD_DOESNT_MATCH.getRtnCode();
 			return new UserLoginResponseModel(code, user_id, userName);
 		}
 		

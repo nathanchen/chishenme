@@ -64,7 +64,7 @@ public class FriendController
 		UserPartner userPartner = userPartnerMapper.selectLatestPartnerStatusByUserIdAndFriendId(user_id, friend_id);
 		if (userPartner != null)
 		{
-			// not partner yet
+			// already are friends
 			if (userPartner.getStatus() == StatusReference.USER_PARTNER_STATUS_FRIEND.getStatusCode())
 			{
 				code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_ARE_ALREADY_FRIENDS.getRtnCode();
