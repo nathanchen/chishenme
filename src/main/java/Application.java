@@ -1,12 +1,5 @@
-import com.chishenme.dao.user.UserAccountStatusMapper;
-import com.chishenme.dao.user.UserInfoMapper;
-import com.chishenme.dao.user.UserLoginHistoryMapper;
-import com.chishenme.dao.user.UserLoginInfoMapper;
-import com.chishenme.dao.user.UserMapper;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
