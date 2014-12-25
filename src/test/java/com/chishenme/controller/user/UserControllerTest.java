@@ -28,7 +28,7 @@ public class UserControllerTest extends TestCase
 	
 	public void testCreateUser4() throws JSONException, IOException
 	{
-		URL url = new URL(urlPrefixString + "user/add?name=John@g&pwd=123456&confirm_pwd=123456");
+		URL url = new URL(urlPrefixString + "user/add?name=John@g&pwd=123456&confirm_pwd=123456&checksum=7dab883da42e51ab6a994661c47ba8fa");
 		
 		JSONObject json = new JSONObject(getHtml(url));
 		assertEquals(4, json.get("code"));
@@ -36,9 +36,25 @@ public class UserControllerTest extends TestCase
 	
 	public void testLogin0() throws JSONException, IOException
 	{
-		URL url = new URL(urlPrefixString + "user/login?name=tringchen@gai.com&pwd=123456");
+		URL url = new URL(urlPrefixString + "user/login?name=tringchen@gai.com&pwd=123456&checksum=7dab883da42e51ab6a994661c47ba8fa");
 		
 		JSONObject json = new JSONObject(getHtml(url));
 		assertEquals(0, json.get("code"));
+	}
+	
+	public void testLogin5() throws JSONException, IOException
+	{
+		URL url = new URL(urlPrefixString + "user/login?name=tringchen@gai.com&pwd=123456&checksum=12345678");
+		
+		JSONObject json = new JSONObject(getHtml(url));
+		assertEquals(5, json.get("code"));
+	}
+	
+	public void testLogin6() throws JSONException, IOException
+	{
+		URL url = new URL(urlPrefixString + "user/login?name=tringchen@gai.com&pwd=123456");
+		
+		JSONObject json = new JSONObject(getHtml(url));
+		assertEquals(6, json.get("code"));
 	}
 }

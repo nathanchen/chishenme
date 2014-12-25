@@ -124,7 +124,7 @@ public class UserController
     
     @RequestMapping("/user/login")
     @Transactional
-    public UserLoginResponseModel login(@RequestParam("name") String name, @RequestParam("pwd") String password,
+    public UserLoginResponseModel login(@RequestParam("name") String name, @RequestParam("pwd") String password, @RequestParam("checksum") String checksum,
     		HttpServletRequest httpServletRequest)
 	{
 		int code = RtnCodeReference.USER_LOGIN_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
@@ -142,6 +142,20 @@ public class UserController
 		if (password == null || password.trim().equals(""))
 		{
 			code = RtnCodeReference.USER_LOGIN_PASSWORD_IS_NULL_OR_EMPTY.getRtnCode();
+			return new UserLoginResponseModel(code, user_id, userName);
+		}
+		
+		// checksum is not null or empty
+		if (checksum == null || checksum.trim().equals(""))
+		{
+			code = RtnCodeReference.USER_LOGIN_CHECKSUM_IS_NULL_OR_EMPTY.getRtnCode();
+			return new UserLoginResponseModel(code, user_id, userName);
+		}
+		
+		// checksum should equal to encypted(name+password)
+		if (! MD5Encryption.encrypt(name + password).equals(checksum))
+		{
+			code = RtnCodeReference.USER_LOGIN_CHECKSUM_FAIL.getRtnCode();
 			return new UserLoginResponseModel(code, user_id, userName);
 		}
 		
