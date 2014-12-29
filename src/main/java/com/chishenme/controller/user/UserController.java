@@ -108,7 +108,7 @@ public class UserController
     	}
     	
     	// valid name format
-    	if (! UserCriteria.isValidUserNameFormat(name))
+    	if (! UserCriteria.isValidEmailFormat(name))
 		{
     		code = RtnCodeReference.USER_CREATEUSER_INVALID_NAME_FORMAT.getRtnCode();
 			return new UserAddResponseModel(code, userName, userInfo);
