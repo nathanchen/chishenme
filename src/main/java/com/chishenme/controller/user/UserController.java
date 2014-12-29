@@ -58,11 +58,47 @@ public class UserController
     public UserAddResponseModel createUser(@RequestParam("name") String name,
     		@RequestParam("pwd") String password, 
     		@RequestParam("confirm_pwd") String confirm_password,
+    		@RequestParam("checksum") String checksum,
     		HttpServletRequest httpServletRequest)
     {
     	UserInfo userInfo = new UserInfo();
     	int code = RtnCodeReference.USER_CREATEUSER_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
     	String userName = "";
+    	
+    	// name is null or empty
+    	if (name == null || name.trim().equals(""))
+    	{
+    		code = RtnCodeReference.USER_CREATEUSER_NAME_IS_NULL_OR_EMPTY.getRtnCode();
+    		return new UserAddResponseModel(code, userName, userInfo);
+    	}
+    	
+    	// password is null or empty
+    	if (password == null || password.trim().equals(""))
+    	{
+    		code = RtnCodeReference.USER_CREATEUSER_PASSWORD_IS_NULL_OR_EMPTY.getRtnCode();
+    		return new UserAddResponseModel(code, userName, userInfo);
+    	}
+    	
+    	// confirm_password is null or empty
+    	if (confirm_password == null || confirm_password.trim().equals(""))
+    	{
+    		code = RtnCodeReference.USER_CREATEUSER_CONFIRM_PASSWORD_IS_NULL_OR_EMPTY.getRtnCode();
+    		return new UserAddResponseModel(code, userName, userInfo);
+    	}
+    
+    	// checksum is null or empty
+    	if (checksum == null || checksum.trim().equals(""))
+    	{
+    		code = RtnCodeReference.USER_CREATEUSER_CHECKSUM_IS_NULL_OR_EMPTY.getRtnCode();
+    		return new UserAddResponseModel(code, userName, userInfo);
+    	}
+    	
+    	// checksum should equal to encypted(name+password)
+    	if (! MD5Encryption.encrypt(name + password).equals(checksum))
+    	{
+    		code = RtnCodeReference.USER_CREATEUSER_CHECKSUM_FAIL.getRtnCode();
+    		return new UserAddResponseModel(code, userName, userInfo);
+    	}
     	
     	// confirm password matches password
     	if (! matchConfirmPassword(password, confirm_password))
@@ -161,7 +197,7 @@ public class UserController
 		
 		// only one entry in DB has the same username and password
 		// TODO: password should be encrypted on client side
-		ArrayList<User> userList = (ArrayList<User>) userMapper.getUsersByNameAndPassword(name, MD5Encryption.encrypt(password));
+		ArrayList<User> userList = (ArrayList<User>) userMapper.getUsersByNameAndPassword(name, password);
 		int numberOfUsersHasTheSameUsernameAndPassword = userList.size();
 		if (numberOfUsersHasTheSameUsernameAndPassword <= 0)
 		{
@@ -182,7 +218,7 @@ public class UserController
 		
 		// add a new UserLoginInfo
 		UserLoginInfo userLoginInfo = new UserLoginInfo(user_id, userName, 
-					password, MD5Encryption.encrypt(password), 
+					password, MD5Encryption.encrypt(userName), 
 					StatusReference.USER_LOGIN_INFO_STATUS_NORMAL.getStatusCode(), 
 					ModifierCodeReference.SYSTEM.getModifierCode());
 		userLoginInfoMapper.addUserLoginInfo(userLoginInfo);
