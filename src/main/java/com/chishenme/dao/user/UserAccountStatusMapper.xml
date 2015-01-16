@@ -7,4 +7,11 @@
         INSERT INTO user_account_status (user_id, status, modifier_code)
         VALUES (#{user_id}, #{status}, #{modifier_code})
     </insert>
+    
+    <select id="selectLatestUserAccountStatus" parameterType="int" resultType="com.chishenme.model.user.UserAccountStatus">
+    	SELECT * FROM user_account_status
+    	WHERE user_id = #{user_id} 
+    	ORDER BY modifier_code DESC 
+    	LIMIT 1
+    </select>
 </mapper>

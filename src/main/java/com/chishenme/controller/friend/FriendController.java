@@ -1,5 +1,7 @@
 package com.chishenme.controller.friend;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import com.chishenme.dao.user.UserInfoMapper;
 import com.chishenme.model.friend.FriendBlackListInfo;
 import com.chishenme.model.friend.UserPartner;
 import com.chishenme.model.response.friend.FriendAddResponseModel;
+import com.chishenme.model.response.friend.FriendRequestsResponseModel;
+import com.chishenme.util.MD5Encryption;
 
 
 @RestController
@@ -35,7 +39,7 @@ public class FriendController
 	
 	@RequestMapping(value = "/friend/add")
     @Transactional
-    public FriendAddResponseModel requestToAddFriend(@RequestParam("userid") int user_id, @RequestParam("friendid") int friend_id)
+    public FriendAddResponseModel requestToAddFriend(@RequestParam("userid") int user_id, @RequestParam("friendid") int friend_id, @RequestParam("checksum") String checksum)
     {
 		int code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
 		
@@ -43,6 +47,20 @@ public class FriendController
 		if (user_id == friend_id)
 		{
 			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_CANNOT_FRIEND_SELF.getRtnCode();
+			return new FriendAddResponseModel(code);
+		}
+		
+		// checksum is null or empty
+		if (checksum == null || checksum.trim().equals(""))
+		{
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_CHECKSUM_IS_NULL_OR_EMPTY.getRtnCode();
+			return new FriendAddResponseModel(code);
+		}
+		
+		// checksum should equal to encrypted(user_id + friend_id)
+		if (! checksum.equals(MD5Encryption.encrypt(user_id + "" + friend_id)))
+		{
+			code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_CHECKSUM_FAIL.getRtnCode();
 			return new FriendAddResponseModel(code);
 		}
 		
@@ -111,5 +129,32 @@ public class FriendController
 		userPartnerMapper.addUserPartner(userPartner);
 		return new FriendAddResponseModel(code);
     }
+	
+	@RequestMapping(value = "/friend/status")
+	public FriendRequestsResponseModel checkFriendRequestStatus(@RequestParam("userid") int user_id, @RequestParam("checksum") String checksum)
+	{
+		int code = RtnCodeReference.CHECK_FRIEND_REQUEST_SUCCESSFULLY.getRtnCode();
+		
+		// checksum is not null or empty
+		if (checksum == null || checksum.trim().equals(""))
+		{
+			code = RtnCodeReference.CHECK_FRIEND_REQUEST_CHECKSUM_IS_NULL_OR_EMPTY.getRtnCode();
+			return new FriendRequestsResponseModel(code, null);
+		}
+		
+		// checksum should equal to encrypted(user_id)
+		if (! checksum.equals(MD5Encryption.encrypt(String.valueOf(user_id))))
+		{
+			code = RtnCodeReference.CHECK_FRIEND_REQUEST_CHECKSUM_FAIL.getRtnCode();
+			return new FriendRequestsResponseModel(code, null);
+		}
+		
+		// user_id is invalid
+		
+		// get all requests status
+		
+		
+		return null;
+	}
 }
 
