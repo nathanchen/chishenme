@@ -41,6 +41,7 @@ public class FriendController
     @Transactional
     public FriendAddResponseModel requestToAddFriend(@RequestParam("userid") int user_id, @RequestParam("friendid") int friend_id, @RequestParam("checksum") String checksum)
     {
+		// TODO params are in string format, and then manually cast into integer
 		int code = RtnCodeReference.FRIEND_REQUESTTOADDFRIEND_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
 		
 		// cannot add self as friend
