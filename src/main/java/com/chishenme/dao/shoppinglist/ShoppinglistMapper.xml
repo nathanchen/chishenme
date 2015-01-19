@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace='com.chishenme.dao.shoppinglist.ShoppinglistMapper'>
+	<insert id="addShoppinglist" parameterType="com.chishenme.model.shoppinglist.Shoppinglist">
+		INSERT INTO shoppinglist (creator_id, subject, shoppinglist_status, modifier_code)
+		VALUES (#{creator_id}, #{subject}, #{shoppinglist_status}, #{modifier_code})
+	</insert>
+</mapper>

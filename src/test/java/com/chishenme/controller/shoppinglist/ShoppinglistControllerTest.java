@@ -3,6 +3,7 @@ package com.chishenme.controller.shoppinglist;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.json.JSONException;
@@ -29,6 +30,14 @@ public class ShoppinglistControllerTest extends TestCase
 	public void testShoppinglistController1() throws JSONException, IOException
 	{
 		URL url = new URL(urlPrefixString + "/shoppinglist/item/add?creator_id=1&subject=apple&quantity=1&unit=&checksum=b44aba5baec9c83a35bc2bc43e41b43d");
+		
+		JSONObject jsonObject = new JSONObject(getHtml(url));
+		assertEquals(0, jsonObject.get("code"));
+	}
+	
+	public void testAddAShoppinglist() throws IOException, JSONException
+	{
+		URL url = new URL(urlPrefixString  + "/shoppinglist/add?creator_id=1&subject=test&checksum=ba88c155ba898fc8b5099893036ef205");
 		
 		JSONObject jsonObject = new JSONObject(getHtml(url));
 		assertEquals(0, jsonObject.get("code"));

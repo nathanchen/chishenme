@@ -19,12 +19,13 @@ public class Shoppinglist
 	}
 	
 	public Shoppinglist(int creator_id, String subject,
-			int shoppinglist_status)
+			int shoppinglist_status, int modifier_code)
 	{
 		super();
 		this.creator_id = creator_id;
 		this.subject = subject;
 		this.shoppinglist_status = shoppinglist_status;
+		this.modifier_code = modifier_code;
 	}
 
 	public int getShoppinglist_id()

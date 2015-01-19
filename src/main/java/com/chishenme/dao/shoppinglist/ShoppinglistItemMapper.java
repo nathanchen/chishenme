@@ -1,6 +1,5 @@
 package com.chishenme.dao.shoppinglist;
 
-import java.awt.List;
 import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
