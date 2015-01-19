@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chishenme.config.ModifierCodeReference;
 import com.chishenme.config.RtnCodeReference;
+import com.chishenme.dao.shoppinglist.ShoppinglistInfoMapper;
 import com.chishenme.dao.shoppinglist.ShoppinglistItemMapper;
 import com.chishenme.dao.shoppinglist.ShoppinglistMapper;
 import com.chishenme.model.response.shoppinglist.ShoppinglistAddResponseModel;
 import com.chishenme.model.response.shoppinglist.ShoppinglistItemAddResponseModel;
 import com.chishenme.model.response.shoppinglist.ShoppinglistItemsResponseModel;
 import com.chishenme.model.shoppinglist.Shoppinglist;
+import com.chishenme.model.shoppinglist.ShoppinglistInfo;
 import com.chishenme.model.shoppinglist.ShoppinglistItem;
 import com.chishenme.util.MD5Encryption;
 import com.chishenme.util.Strings;
@@ -35,9 +37,14 @@ public class ShoppinglistController
 	@Autowired
 	private ShoppinglistMapper shoppinglistMapper;
 	
+	@Autowired
+	private ShoppinglistInfoMapper shoppinglistInfoMapper;
+	
+	
 	@RequestMapping(value = "/shoppinglist/item/add")
 	@Transactional
-	public ShoppinglistItemAddResponseModel requestToAddShoppinglistItem(@RequestParam("creator_id") String creator_idString, @RequestParam("subject") String subject, 
+	public ShoppinglistItemAddResponseModel requestToAddShoppinglistItem(@RequestParam("creator_id") String creator_idString, 
+			@RequestParam("shoppinglist_id") String shoppinglist_idString, @RequestParam("subject") String subject, 
 			@RequestParam("quantity") String quantityString, @RequestParam("unit") String unit, @RequestParam("checksum") String checksum)
 	{
 		int code = RtnCodeReference.SHOPPINGLIST_REQUESTTOADDSHOPPINGLISTITEM_REQUEST_FINISHED_SUCCESSFULLY.getRtnCode();
@@ -49,6 +56,14 @@ public class ShoppinglistController
 			return new ShoppinglistItemAddResponseModel(code);
 		}
 		int creator_id = Integer.parseInt(creator_idString);
+		
+		// shoppinglist_idString is null or empty or not an integer
+		if (Strings.isNullOrEmpty(shoppinglist_idString) || !Strings.isInteger(shoppinglist_idString))
+		{
+			code = RtnCodeReference.SHOPPINGLIST_REQUESTTOADDSHOPPINGLISTITEM_INVALID_SHOPPINGLISTID.getRtnCode();
+			return new ShoppinglistItemAddResponseModel(code);
+		}
+		int shoppinglist_id = Integer.parseInt(shoppinglist_idString);
 		
 		// subject is null or empty
 		if (Strings.isNullOrEmpty(subject))
@@ -82,16 +97,22 @@ public class ShoppinglistController
 			return new ShoppinglistItemAddResponseModel(code);
 		}
 		
-		// checksum should equal to encrypted(creator_id + subject + quantity + unit)
-		if (! checksum.equals(MD5Encryption.encrypt(creator_idString + subject + quantityString + unit)))
+		// checksum should equal to encrypted(creator_id + shoppinglist_idString + subject + quantity + unit)
+		if (! checksum.equals(MD5Encryption.encrypt(creator_idString + shoppinglist_idString + subject + quantityString + unit)))
 		{
 			code = RtnCodeReference.SHOPPINGLIST_REQUESTTOADDSHOPPINGLISTITEM_CHECKSUM_FAIL.getRtnCode();
 			return new ShoppinglistItemAddResponseModel(code);
 		}
 		
+		// add shoppinglistitem to TABLE shoppinglist_item
 		ShoppinglistItem shoppinglistItem = new ShoppinglistItem(creator_id, subject, quantity, unit, 
 				RtnCodeReference.SHOPPINGLIST_ITEM_ENABLED.getRtnCode(), ModifierCodeReference.SELF.getModifierCode());
 		shoppinglistItemMapper.addShoppinglistItem(shoppinglistItem);
+		
+		// add shoppinglistitem item_reference_id to TABLE shoppinglist_info
+		long item_id = shoppinglistItem.getEntry_id();
+		ShoppinglistInfo shoppinglistInfo = new ShoppinglistInfo(shoppinglist_id, item_id, ModifierCodeReference.SELF.getModifierCode());
+		shoppinglistInfoMapper.addShoppinglistInfo(shoppinglistInfo);
 		return new ShoppinglistItemAddResponseModel(code);
 	}
 	
@@ -136,7 +157,6 @@ public class ShoppinglistController
 			code = RtnCodeReference.SHOPPINGLIST_REQUESTTOADDSHOPPINGLIST_CHECKSUM_FAIL.getRtnCode();
 			return new ShoppinglistAddResponseModel(code);
 		}
-		logger.debug(MD5Encryption.encrypt(creator_idString + subject));
 		
 		// add a shoppinglist into TABLE shoppinglist
 		Shoppinglist shoppinglist = new Shoppinglist(creator_id, subject, RtnCodeReference.SHOPPINGLIST_ENABLED.getRtnCode(), ModifierCodeReference.SELF.getModifierCode());

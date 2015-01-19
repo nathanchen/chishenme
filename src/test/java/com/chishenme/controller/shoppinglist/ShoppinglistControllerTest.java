@@ -29,7 +29,7 @@ public class ShoppinglistControllerTest extends TestCase
 	
 	public void testShoppinglistController1() throws JSONException, IOException
 	{
-		URL url = new URL(urlPrefixString + "/shoppinglist/item/add?creator_id=1&subject=apple&quantity=1&unit=&checksum=b44aba5baec9c83a35bc2bc43e41b43d");
+		URL url = new URL(urlPrefixString + "/shoppinglist/item/add?creator_id=1&shoppinglist_id=1&subject=apple&quantity=1&unit=&checksum=8b93081401b7b1a73e5ed9dce3071337");
 		
 		JSONObject jsonObject = new JSONObject(getHtml(url));
 		assertEquals(0, jsonObject.get("code"));
